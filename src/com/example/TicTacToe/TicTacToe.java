@@ -142,7 +142,7 @@ public class TicTacToe {
                 }
                 sb.append( ch );
             }
-            sb.append( '\n');
+            //sb.append( '\n');
         }
         return sb.toString();
     }

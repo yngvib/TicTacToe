@@ -9,7 +9,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Reset"
-            android:onClick="buttonReset"
             />
     <Button
             android:id="@+id/button"
@@ -23,8 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
-    <TextView
-            android:id="@+id/textview"
+    <com.example.TicTacToe.BoardView
+            android:id="@+id/boardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="40dp"

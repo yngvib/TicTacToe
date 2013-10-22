@@ -14,8 +14,10 @@ public class MainActivity extends Activity {
      * Called when the activity is first created.
      */
 
-    TextView m_tv;
+    BoardView m_bv;
+    //TextView m_tv;
     Button m_button;
+    Button m_buttonReset;
     Spinner m_spinner;
 
     TicTacToe m_ttt;
@@ -25,9 +27,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        m_tv = (TextView) findViewById( R.id.textview );
+        //m_tv = (TextView) findViewById( R.id.textview );
+        m_bv = (BoardView) findViewById( R.id.boardview );
         m_button = (Button) findViewById( R.id.button );
         m_spinner = (Spinner) findViewById( R.id.spinner );
+        m_buttonReset = (Button) findViewById( R.id.buttonReset );
+        m_buttonReset.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                m_ttt.reset();
+                updateDisplay();
+            }
+        });
 
         m_ttt = new TicTacToe();
 
@@ -47,7 +58,8 @@ public class MainActivity extends Activity {
                 new ArrayAdapter<String>( this, android.R.layout.simple_spinner_dropdown_item, actionsStr );
 
         m_spinner.setAdapter( arrayAdapter );
-        m_tv.setText( m_ttt.toString() );
+        //m_tv.setText( m_ttt.toString() );
+        m_bv.setBoard( m_ttt.toString() );
     }
 
 
@@ -71,10 +83,5 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void buttonReset( View view )
-    {
-        m_ttt.reset();
-        updateDisplay();
-    }
 
 }

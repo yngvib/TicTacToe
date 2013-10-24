@@ -9,7 +9,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,8 +22,11 @@ import android.view.View;
  */
 public class BoardView extends View {
 
+    private int m_cellWidth = 0;
+    private int m_cellHeight = 0;
     private char[][] m_board = new char[3][3];
     private Paint m_paint = new Paint();
+    private OnMoveEventHandler m_moveHandler = null;
 
     ShapeDrawable m_shape = new ShapeDrawable( new OvalShape() );
     Rect m_rect = new Rect();
@@ -42,14 +47,25 @@ public class BoardView extends View {
         invalidate();
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int size = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        setMeasuredDimension(size, size);
+    }
+
+    @Override
+    protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld) {
+        m_cellWidth = xNew / 3;
+        m_cellHeight = yNew / 3;
+    }
+
     public void onDraw( Canvas canvas )
     {
-        final int width = getWidth() / 3;
-        final int height = getHeight() / 3;
-
         for ( int r=2; r>=0; --r ) {
             for ( int c=0; c<3; ++c ) {
-                m_rect.set( c * width, r * height, c * width + width, r * height + height );
+                m_rect.set( c * m_cellWidth, r * m_cellHeight,
+                            c * m_cellWidth + m_cellWidth, r * m_cellHeight + m_cellHeight );
                 canvas.drawRect( m_rect, m_paint );
                 m_rect.inset( (int)(m_rect.width() * 0.1), (int)(m_rect.height() * 0.1) );
                 m_shape.setBounds( m_rect );
@@ -67,6 +83,31 @@ public class BoardView extends View {
                 }
             }
         }
+    }
 
+    private int xToCol( int x ) {
+        return x / m_cellWidth;
+    }
+
+    private int yToRow( int y ) {
+        return y / m_cellHeight;
+    }
+
+    @Override
+    public boolean onTouchEvent( MotionEvent event ) {
+
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+
+        if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
+            if ( m_moveHandler != null ) {
+                m_moveHandler.onMove( xToCol(x), yToRow(y) );
+            }
+        }
+        return true;
+    }
+
+    public void setMoveEventHandler( OnMoveEventHandler handler ) {
+        m_moveHandler = handler;
     }
 }

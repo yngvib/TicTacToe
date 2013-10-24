@@ -8,6 +8,7 @@ import android.widget.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends Activity {
     /**
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
     Spinner m_spinner;
 
     TicTacToe m_ttt;
+    Random  m_random = new Random();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,17 @@ public class MainActivity extends Activity {
 
         //m_tv = (TextView) findViewById( R.id.textview );
         m_bv = (BoardView) findViewById( R.id.boardview );
+        m_bv.setMoveEventHandler( new OnMoveEventHandler() {
+            @Override
+            public void onMove(int col, int row) {
+                String actionStr = "(" + col + "," + row + ")";
+                TicTacToe.Move move = m_ttt.strToMove( actionStr );
+                if ( move != null ) {
+                    m_ttt.makeMove( move );
+                    updateDisplay();
+                }
+            }
+        });
         m_button = (Button) findViewById( R.id.button );
         m_spinner = (Spinner) findViewById( R.id.spinner );
         m_buttonReset = (Button) findViewById( R.id.buttonReset );
@@ -63,32 +76,40 @@ public class MainActivity extends Activity {
         m_spinner.setAdapter( arrayAdapter );
         //m_tv.setText( m_ttt.toString() );
         m_bv.setBoard( m_ttt.toString() );
+        if ( m_ttt.isGameOver() ) {
+            Toast.makeText( getApplicationContext(), "Game over!", Toast.LENGTH_LONG ).show();
+        }
+
     }
 
 
     public void buttonPlay( View view )
     {
+        /*
         Button button = (Button) view;
-
         Log.d("***** TicTacToe", "Button clicked");
         Object action = m_spinner.getSelectedItem();
         if ( action != null ) {
-            //Toast.makeText( getApplicationContext(), action.toString(), Toast.LENGTH_LONG ).show();
             TicTacToe.Move move = m_ttt.strToMove( action.toString() );
             if ( move != null ) {
                 m_ttt.makeMove( move );
                 updateDisplay();
-                if ( m_ttt.isGameOver() ) {
-                   Toast.makeText( getApplicationContext(), "Game over!", Toast.LENGTH_LONG ).show();
-               }
             }
-
         }
+        */
+        List<TicTacToe.Move> actions = m_ttt.getActions();
+        if ( actions.size() > 0 ) {
+            TicTacToe.Move move = actions.get( m_random.nextInt( actions.size() ) );
+            m_ttt.makeMove( move );
+            updateDisplay();
+        }
+
+
     }
 
     @Override
     public void onSaveInstanceState( Bundle savedInstanceState ) {
-        super.onSaveInstanceState( savedInstanceState );
+        super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString( "stateTTT", m_ttt.toString() );
     }
 

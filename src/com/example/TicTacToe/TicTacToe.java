@@ -56,6 +56,26 @@ public class TicTacToe {
         }
     }
 
+    public void set( String state ) {
+        reset();
+        int x = 0, o = 0;
+        for ( int i=0, row=2; row>=0; --row ) {
+            for ( int col=0; col<3; ++col, ++i ) {
+                switch ( state.charAt(i) ) {
+                    case 'x':
+                        m_board[col][row] = PLAYER_X;
+                        ++x;
+                        break;
+                    case 'o':
+                        m_board[col][row] = PLAYER_O;
+                        ++o;
+                        break;
+                }
+            }
+        }
+        m_toMove = ( x > o ) ? PLAYER_O : PLAYER_X;
+    }
+
     public List<Move> getActions() {
         List<Move> actions = new ArrayList<Move>();
         if ( !isGameOver() ) {

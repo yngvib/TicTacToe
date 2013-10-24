@@ -41,7 +41,10 @@ public class MainActivity extends Activity {
         });
 
         m_ttt = new TicTacToe();
-
+        if ( savedInstanceState != null ) {
+            String state = savedInstanceState.getString( "stateTTT" );
+            m_ttt.set( state );
+        }
         updateDisplay();
     }
 
@@ -83,5 +86,10 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void onSaveInstanceState( Bundle savedInstanceState ) {
+        super.onSaveInstanceState( savedInstanceState );
+        savedInstanceState.putString( "stateTTT", m_ttt.toString() );
+    }
 
 }

@@ -26,8 +26,7 @@
             android:id="@+id/boardview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
-            android:text="some text ..."
+            android:background="#aaaaff"
             />
 </LinearLayout>
 
